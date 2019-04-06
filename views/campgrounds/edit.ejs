@@ -1,0 +1,15 @@
+<%- include('../partials/header')%>
+
+<form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST">
+    <input type="text" name="campground[name]" value="<%= campground.name%>">
+    <input type="text" name="campground[image]" value="<%= campground.image%>">
+    <input type="text" name="campground[price]" value="<%= campground.price%>">
+    <textarea name="campground[description]" id="" cols="30" rows="10">
+        <%= campground.description%>
+    </textarea>
+    <button type="submit">Update campground</button>
+</form>
+
+
+
+<%- include('../partials/footer') %>

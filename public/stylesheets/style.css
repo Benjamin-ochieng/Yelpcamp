@@ -1,0 +1,22 @@
+h4{
+font-size: 1.8rem;
+margin-top: 16px;
+color: #000000;
+}
+
+.btn-link{
+    margin-left: 15px;
+    font-size: 1.6rem;
+    
+}
+
+.delete-btn{
+    display: inline;
+    color: crimson;
+    border: none;
+    padding: 0;
+}
+
+.campground-thumbnail{
+    padding: 15px;
+}
