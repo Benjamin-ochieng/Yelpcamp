@@ -20,11 +20,17 @@ function isCampgroundAuthorized (req,res,next) {
     if (req.isAuthenticated) {
        
         Campground.findById(req.params.id, (err,campground) => {
-            if (campground.author.id.equals(req.user.id)) {
-                next();
+            if (err || campground === undefined) {
+                req.flash('err_msg','Sorry, that campground does not exist');
+                res.redirect('/back');
             } else {
-                req.flash('error_msg','You are not allowed to do that' );
-                res.redirect(`/campgrounds/${req.params.id}`);
+
+                if (campground.author.id.equals(req.user._id)) {
+                    next();
+                } else {
+                    req.flash('error_msg','You are not allowed to do that' );
+                    res.redirect(`/campgrounds/${req.params.id}`);
+                }
             }
         });      
     } else {
@@ -37,12 +43,16 @@ function isCampgroundAuthorized (req,res,next) {
 function isCommentAuthorized(req,res,next){
     if (req.isAuthenticated()) {
         Comment.findById(req.params.comment_id, (err,comment)=>{
+          if (err || comment === undefined) {
+              req.flash('err_msg','Sorry the comment does not exist')
+          } else {
             if (comment.author.id.equals(req.user.id)) {
                 next()
             } else {
                 req.flash('error_msg','You are not allowed to do that' );              
                 res.redirect(`/campgrounds/${req.params.id}`);
             }
+          }
         });
         
     } else {
