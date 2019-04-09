@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const express = require('express');
 const app = express();
+const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
@@ -17,7 +18,8 @@ const User = require('./models/user');
 const seed = require('./seed');
 
 mongoose.set('useFindAndModify', false);
-mongoose.connect('mongodb://localhost:27017/yelp_camp',{ useNewUrlParser: true } )
+// mongoose.connect('mongodb://localhost:27017/yelp_camp',{ useNewUrlParser: true } );
+mongoose.connect('mongodb+srv://BENJAMIN-OCHIENG:Lcdescfmp4DWZ8Hj@yelpcamp-hacx1.mongodb.net/yelp_camp?retryWrites=true',{ useNewUrlParser: true } );
 app.set('view engine', 'ejs');
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({extended: true}));
@@ -62,7 +64,7 @@ app.use('/campgrounds/:id',commentRoutes);
 // eslint-disable-next-line no-unused-vars
 
 
-app.listen(3000,()=>{
+app.listen(port,()=>{
 
-        console.log('Server has started');
+        console.log(`Our app has started and is running on https://localhost:${port}`);
 });
