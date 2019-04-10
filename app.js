@@ -18,7 +18,9 @@ const User = require('./models/user');
 const seed = require('./seed');
 
 mongoose.set('useFindAndModify', false);
-mongoose.connect(process.env.DATABASEURL,{ useNewUrlParser: true } );
+// mongoose.connect(process.env.DATABASEURL,{ useNewUrlParser: true } );
+mongoose.connect('mongodb+srv://BENJAMIN-OCHIENG:Lcdescfmp4DWZ8Hj@yelpcamp-hacx1.mongodb.net/yelp_camp?retryWrites=true',{ useNewUrlParser: true } );
+app.set('view engine', 'ejs');
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({extended: true}));
 // eslint-disable-next-line no-undef
