@@ -12,7 +12,7 @@ router.get('/', auth.isLoggedIn, (req,res) => {
         if(err){
             console.log(err);
         } else {
-            res.render('campgrounds/index', {campgrounds:foundCampgrounds});
+            res.render('campgrounds/index', {campgrounds:foundCampgrounds, page:'campgrounds'});
         }
     })
 });

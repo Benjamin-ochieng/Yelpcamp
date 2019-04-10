@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const express = require('express');
 const app = express();
+// eslint-disable-next-line no-undef
 const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
@@ -18,6 +19,7 @@ const User = require('./models/user');
 const seed = require('./seed');
 
 mongoose.set('useFindAndModify', false);
+// eslint-disable-next-line no-undef
 mongoose.connect(process.env.DATABASEURL,{ useNewUrlParser: true } );
 // mongoose.connect('mongodb+srv://BENJAMIN-OCHIENG:Lcdescfmp4DWZ8Hj@yelpcamp-hacx1.mongodb.net/yelp_camp?retryWrites=true',{ useNewUrlParser: true } );
 app.set('view engine', 'ejs');
