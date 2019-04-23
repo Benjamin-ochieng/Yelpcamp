@@ -9,6 +9,7 @@
                 <li class="list-group-item">Info 2</li>
                 <li class="list-group-item">Info 3</li>
             </div>
+            <div id="map"></div>
         </div>
         <div class="col-md-9">
             <div class="thumbnail campground-thumbnail">
@@ -55,6 +56,34 @@
         </div>
     </div>
 </div>
+<script src='https://unpkg.com/mapbox@1.0.0-beta9/dist/mapbox-sdk.min.js'></script>
+<script>
+  
+        /*eslint-disable*/
+        // let lat = <%= campground.lat %>;
+        // /*eslint-disable*/
+        // let lng = <%= campground.lng %>;
+    
+        // let center = [lat,lng]
 
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYmVuamFtaW4tb2NoaWVuZyIsImEiOiJjanVsaWw2OGgwa3JmNDRwd3V4Y2dxdDB6In0.qc8dE0523NQrTUF1N-ebtQ';
+        let client = new MapboxClient(mapboxgl.accessToken);
+     
+        client.geocodeReverse({longitude:<%=campground.lng%>,latitude:<%=campground.lat%>}, function(err,res){
+            
+            let center = res.features[0].center;
+            console.log(center);
+            let map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/mapbox/streets-v11', 
+            center:center,
+            zoom:13
+        });
+     
+        new mapboxgl.Marker().setLngLat(center).addTo(map);
+         
+});
+
+</script>
 
 <%- include('../partials/footer') %>

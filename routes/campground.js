@@ -3,7 +3,18 @@ const express = require('express');
 const router = express.Router();
 const Campground = require('../models/campground');
 const Comment = require('../models/comment');
-const auth = require('../middleware/index')
+const auth = require('../middleware/index');
+const nodeGeocoder = require('node-geocoder');
+
+let geocoder = nodeGeocoder({
+    provider:'opencage',
+    httpAdapter: 'https',
+    // eslint-disable-next-line no-undef
+    apiKey:process.env.GEOCODER_API_KEY,
+    formarter:null
+    
+});
+
 
 
 router.get('/', auth.isLoggedIn, (req,res) => {
@@ -31,22 +42,33 @@ router.post('/',auth.isLoggedIn,(req,res) => {
          id:req.user.id,
          username:req.user.username
     }
-
-    let campground = {name:name, image:image, price:price, description:description,author}
-
-    // eslint-disable-next-line no-unused-vars
-    Campground.create(campground, (err,newCampground) => {
+    geocoder.geocode(req.body.location, (err,data)=>{
         if(err){
-            console.log(err);
-        }else {
-            res.redirect('/campgrounds');
+            req.flash('error_msg', 'Signed out successfuly');
+            res.redirect('back');
         }
-    })
+        console.log(data[0].streetName);
+        let lat = data[0].latitude;
+        let lng = data[0].longitude;
+        let location = data[0].streetName;
+        let campground = {name:name, image:image, location:location, lat:lat, lng:lng, price:price, description:description,author}
+
+        // eslint-disable-next-line no-unused-vars
+        Campground.create(campground, (err,newCampground) => {
+            if(err){
+                console.log(err);
+            }else {
+                res.redirect('/campgrounds');
+            }
+        })
+    });
+
 });
 
 
 
 router.get("/:id", auth.isLoggedIn, function(req, res){
+     
     //find the campground with provided ID
     Campground.findById(req.params.id).populate('comments').exec(function(err, foundCampground){
         if(err){
