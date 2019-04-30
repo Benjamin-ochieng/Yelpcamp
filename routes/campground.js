@@ -5,6 +5,7 @@ const Campground = require('../models/campground');
 const Comment = require('../models/comment');
 const auth = require('../middleware/index');
 const nodeGeocoder = require('node-geocoder');
+// const locus = require('locus');
 
 let geocoder = nodeGeocoder({
     provider:'opencage',
@@ -16,16 +17,30 @@ let geocoder = nodeGeocoder({
 });
 
 
-
 router.get('/', auth.isLoggedIn, (req,res) => {
-
+   if(req.query.search){
+       const regexp = new RegExp(escapeRegex(req.query.search), 'gi');
+       Campground.find({name:regexp},(err,foundCampgrounds) => {
+        if(err){
+            console.log(err);
+        } else {
+            if (foundCampgrounds.length < 1) {
+                req.flash('error_msg', 'No results containing all your search terms were found');
+                res.redirect('/campgrounds');
+            } else {
+              res.render('campgrounds/index', {campgrounds:foundCampgrounds, page:'campgrounds'});
+            }
+        }
+    }) 
+   }else {
     Campground.find({},(err,foundCampgrounds) => {
         if(err){
             console.log(err);
         } else {
             res.render('campgrounds/index', {campgrounds:foundCampgrounds, page:'campgrounds'});
         }
-    })
+    })       
+}
 });
 
 router.get('/new',auth.isLoggedIn,(req,res) => {
@@ -114,5 +129,9 @@ router.delete('/:id',auth.isCampgroundAuthorized, (req,res) => {
     });
 });
 
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
 
 module.exports = router

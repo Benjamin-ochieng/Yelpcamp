@@ -18,6 +18,7 @@ const Comment = require('./models/comment');
 const User = require('./models/user');
 // eslint-disable-next-line no-unused-vars
 const seed = require('./seed');
+const moment = require('./libs/moment');
 
 mongoose.set('useFindAndModify', false);
 // eslint-disable-next-line no-undef
@@ -46,6 +47,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next) => {
     res.locals.user = req.user;
+    res.locals.moment = moment;
     res.locals.error = req.flash('error');
     res.locals.success_msg =  req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
