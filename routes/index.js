@@ -2,7 +2,8 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const User = require('../models/user')
+const User = require('../models/user');
+const locus = require('locus')
 
 router.get('/',(req,res) => {
     res.render('landing');
@@ -15,10 +16,13 @@ router.get('/register',(req,res)=>{
 
 router.post('/register', (req,res) => {
 
-    let newUser = req.body.username;
-
+    let newUser = new User({username:req.body.username});
+    
+     if (req.body.adminCode === 'Oracle123') {
+         newUser.isAdmin = true;
+     }
     // eslint-disable-next-line no-unused-vars
-    User.register(new User({username:newUser}), req.body.password, (err,newUser) => {
+    User.register(newUser, req.body.password, (err,newUser) => {
 
         if(err){
             req.flash('error', err.message)
