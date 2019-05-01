@@ -41,6 +41,7 @@
                             <p>
                                 <%= comment.text %> 
                             </p>
+                            <span class="pull-right"><%= moment(comment.createdAt)%></span>
                         </div>
                         <% if(user && comment.author.id.equals(user.id) || user && user.isAdmin){ %>
                         <div class="col-md-12">
@@ -69,7 +70,7 @@
             container: 'map', // container id
             style: 'mapbox://styles/mapbox/streets-v11', 
             center:center,
-            zoom:13
+            zoom:8
         });
      
         new mapboxgl.Marker().setLngLat(center).addTo(map);
