@@ -25,7 +25,7 @@ function isCampgroundAuthorized (req,res,next) {
                 res.redirect('/back');
             } else {
 
-                if (campground.author.id.equals(req.user._id)) {
+                if (campground.author.id.equals(req.user._id) || req.user && req.user.isAdmin) {
                     next();
                 } else {
                     req.flash('error_msg','You are not allowed to do that' );
@@ -46,7 +46,7 @@ function isCommentAuthorized(req,res,next){
           if (err || comment === undefined) {
               req.flash('err_msg','Sorry the comment does not exist')
           } else {
-            if (comment.author.id.equals(req.user.id)) {
+            if (comment.author.id.equals(req.user.id) || req.user && req.user.isAdmin) {
                 next()
             } else {
                 req.flash('error_msg','You are not allowed to do that' );              
