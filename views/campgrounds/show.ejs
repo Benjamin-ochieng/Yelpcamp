@@ -18,8 +18,9 @@
                     <h4 class="pull-right">$<%=campground.price%></h4>
                     <h4><a><%=campground.name%></a></h4>
                     <p><%= campground.description %></p>
-                    <label> Submitted by <%=campground.author.username%></label>
-
+                    <p> 
+                        <em>Submitted by: <a href="/users/<%= campground.author.id %>"><%=campground.author.username%></a>, <%= moment(campground.createdAt)%></em>
+                    </p>
                       <% if(user && campground.author.id.equals(user._id) || user && user.isAdmin){ %>      
                     <form class="pull-right" action="/campgrounds/<%=campground._id%>?_method=DELETE" method="post">
                         <input class="btn-link delete-btn" type="submit" value="Delete">

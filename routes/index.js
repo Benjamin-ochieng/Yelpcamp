@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const User = require('../models/user');
-const locus = require('locus')
+// const locus = require('locus')
 
 router.get('/',(req,res) => {
     res.render('landing');
@@ -16,7 +16,13 @@ router.get('/register',(req,res)=>{
 
 router.post('/register', (req,res) => {
 
-    let newUser = new User({username:req.body.username});
+    let newUser = new User({
+        username:req.body.username,
+        firstName:req.body.firstName,
+        lastName:req.body.lastName,
+        email:req.body.email,
+        profileImage:req.body.profileImage,
+    });
     
      if (req.body.adminCode === 'Oracle123') {
          newUser.isAdmin = true;
@@ -55,6 +61,17 @@ router.get('/logout',(req,res) => {
     req.logout();
     req.flash('success_msg', 'Signed out successfuly');
     res.redirect('/login');
+});
+
+
+router.get('/users/:id',(req,res) => {
+     User.findById(req.params.id, (err,foundUser)=>{
+         if (err) {
+             req.flash('error_msg',"Something went wrong");
+             res.redirect('/');
+         }
+         res.render('users/show', {user:foundUser});
+     });
 });
 
 module.exports = router;
