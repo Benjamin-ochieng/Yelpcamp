@@ -74,4 +74,19 @@ router.get('/users/:id',(req,res) => {
      });
 });
 
+
+router.get('/follow/:id', (req,res) => {
+    User.findById(req.params.id).populate('followers').exec((err,foundUser) =>{
+        if (err) {
+            req.flash('error_msg',err.message);
+            res.redirect('back');            
+        }
+        let newFollower = req.user._id;
+        foundUser.followers.push(newFollower);
+        foundUser.save();
+        req.flash('success_msg',`You are now following ${foundUser.username}`);
+        res.redirect(`/users/${req.params.id}`);
+    });
+});
+
 module.exports = router;

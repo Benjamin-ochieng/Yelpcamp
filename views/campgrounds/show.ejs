@@ -63,7 +63,10 @@
         mapboxgl.accessToken = 'pk.eyJ1IjoiYmVuamFtaW4tb2NoaWVuZyIsImEiOiJjanVsaWw2OGgwa3JmNDRwd3V4Y2dxdDB6In0.qc8dE0523NQrTUF1N-ebtQ';
         let client = new MapboxClient(mapboxgl.accessToken);
      
-        client.geocodeReverse({longitude:<%=campground.lng%>,latitude:<%=campground.lat%>}, function(err,res){
+        client.geocodeReverse({
+            longitude:<%= campground.lng %>,
+            latitude:<%= campground.lat %>}, 
+            function(err,res){
             
             let center = res.features[0].center;
             console.log(center);

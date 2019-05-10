@@ -1,3 +1,5 @@
 <%- include('../partials/header')%>
  <h1><%= user.username %></h1>
+ <p><%= user.followers.length > 1 ? `${user.followers.length} followers` : `${user.followers.length} follower`%></p>
+ <a class="btn btn-primary btn-large" href="/follow/<%= user.id %>">Follow</a>
 <%- include('../partials/footer') %>

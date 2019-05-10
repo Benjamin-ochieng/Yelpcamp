@@ -10,6 +10,12 @@ const userSchema = new mongoose.Schema({
     email:String,
     profileImage:String,
     isAdmin:{type:Boolean, default:false},
+    followers:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'User'
+        }
+    ]
 });
 
 userSchema.plugin(passportLocalMongoose);
