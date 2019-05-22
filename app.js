@@ -46,8 +46,17 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use((req,res,next) => {
-    res.locals.user = req.user;
+app.use(async (req,res,next) => {
+  res.locals.user = req.user;
+  if(req.user) {
+    try {
+      let user = await User.findById(req.user._id).populate('notifications', null, { isRead: false }).exec();
+      res.locals.notifications = user.notifications.reverse();
+    } catch(err) {
+      console.log(err.message);
+    }
+   }
+
     res.locals.moment = moment;
     res.locals.error = req.flash('error');
     res.locals.success_msg =  req.flash('success_msg');

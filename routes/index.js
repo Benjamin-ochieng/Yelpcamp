@@ -2,7 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const Campground = require('../models/campground')
 const User = require('../models/user');
+const Notification = require('../models/notification');
 // const locus = require('locus')
 
 router.get('/',(req,res) => {
@@ -65,13 +67,17 @@ router.get('/logout',(req,res) => {
 
 
 router.get('/users/:id',(req,res) => {
-     User.findById(req.params.id, (err,foundUser)=>{
-         if (err) {
-             req.flash('error_msg',"Something went wrong");
-             res.redirect('/');
-         }
-         res.render('users/show', {user:foundUser});
-     });
+     User.findById(req.params.id).populate('followers').exec((err,foundUser)=>{
+        if (err) {
+            req.flash('error_msg',"Something went wrong");
+            res.redirect('/');
+        } else {
+            Campground.find({'author.id':foundUser.id},(err,foundUser_campgrounds)=>{
+                res.render('users/show', {userProfile:foundUser, userCampgrounds:foundUser_campgrounds});
+            });
+        }
+                
+    });
 });
 
 
@@ -83,10 +89,45 @@ router.get('/follow/:id', (req,res) => {
         }
         let newFollower = req.user._id;
         foundUser.followers.push(newFollower);
-        foundUser.save();
+        foundUser.save(()=>{
+         User.findById(newFollower._id).populate('following').exec((err,newFollower)=>{
+            if (err) {
+                req.flash('error_msg',err.message);
+                res.redirect('back');            
+            }
+        newFollower.following.push(foundUser.id);
+        newFollower.save();
+
         req.flash('success_msg',`You are now following ${foundUser.username}`);
-        res.redirect(`/users/${req.params.id}`);
+        res.redirect(`/users/${req.params.id}`);           
+         });  
+            
+        });
     });
+});
+
+router.get('/notifications', (req,res)=>{
+    User.findById(req.user._id).populate('notifications').exec((err,foundUser)=>{
+        if (err) {
+            req.flash('error_msg',err.message);
+            res.redirect('back'); 
+        } else {
+            res.render('users/notifications', {notifications:foundUser.notifications})
+        }       
+    });
+});
+
+router.get('/notifications/:id', (req,res)=>{
+  
+     Notification.findById(req.params.id).populate().exec((err,notification) =>{
+         if (err) {
+            req.flash('error_msg',err.message);
+            res.redirect('back')   
+         }
+         notification.isRead = true;
+         notification.save();
+         res.redirect(`/campgrounds/${notification.campgroundId}`);
+     });
 });
 
 module.exports = router;

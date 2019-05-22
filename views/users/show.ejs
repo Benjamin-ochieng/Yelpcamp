@@ -1,5 +1,67 @@
 <%- include('../partials/header')%>
- <h1><%= user.username %></h1>
- <p><%= user.followers.length > 1 ? `${user.followers.length} followers` : `${user.followers.length} follower`%></p>
- <a class="btn btn-primary btn-large" href="/follow/<%= user.id %>">Follow</a>
+
+<div class="container target">
+    <div class="row">
+        <div class="col-sm-10">
+             <h1 class=""><%= userProfile.username %></h1>
+
+        <% if(userProfile.id === user.id){ %>      
+             <button type="button" class="btn btn-info">Edit profile</button>
+        <% }else if(userProfile.followers.filter(f => f.username === user.username).length > 0){ %>
+            <button type="button" class="btn btn-info">Following</button>
+        <%} else {%>
+            <button type="button" class="btn btn-info">Follow</button> 
+            <%}%>    
+<br>
+        </div>
+      <div class="col-sm-2"><a href="/users" class="pull-right"><img title="profile image" class="img-circle img-responsive" src="http://www.rlsandbox.com/img/profile.jpg"></a>
+
+        </div>
+    </div>
+  <br>
+    <div class="row">
+        <div class="col-sm-3">
+            <!--left col-->
+            <ul class="list-group">
+                <li class="list-group-item text-muted" contenteditable="false">Profile</li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong class="">Posts</strong></span><%=userCampgrounds.length%> </li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong class="">Followers</strong></span><%=userProfile.followers.length %></li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong class="">Following</strong></span><%= user.following.length %></li>
+            </ul>
+        </div>
+        <!--/col-3-->
+        <div class="col-sm-9" contenteditable="false" style="">
+
+            <div class="panel panel-default target">
+                <div class="panel-heading" contenteditable="false">Posts</div>
+                <div class="panel-body">
+            <div class="row">
+                <% userCampgrounds.forEach(campground => { %> 
+				<div class="col-md-4">
+					<div class="thumbnail">
+						<img alt="300x200" src="<%= campground.image %>">
+						<div class="caption">
+							<h4>
+                                <%= campground.name %>
+							</h4>
+							<p>
+                               <a href="/campgrounds/<%= campground._id %>">More Info</a>
+							</p>
+							<p>
+							
+							</p>
+						</div>
+					</div>
+				</div>
+               <%});%>      
+            </div>
+                 
+        </div>
+              
+    </div>
+    </div>
+
+    </div>
+</div>
+
 <%- include('../partials/footer') %>

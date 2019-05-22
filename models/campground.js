@@ -24,7 +24,7 @@ let campgroundSchema = new mongoose.Schema({
     }]
 });
 
-let Campground = new mongoose.model('campground',campgroundSchema);
+let Campground = mongoose.model('campground',campgroundSchema);
 
 module.exports = Campground;
 

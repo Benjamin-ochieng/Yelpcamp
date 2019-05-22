@@ -3,6 +3,8 @@ const express = require('express');
 const router = express.Router();
 const Campground = require('../models/campground');
 const Comment = require('../models/comment');
+const User = require('../models/user');
+const Notification = require('../models/notification');
 const auth = require('../middleware/index');
 const nodeGeocoder = require('node-geocoder');
 const multer = require('multer');
@@ -100,12 +102,37 @@ router.post('/',auth.isLoggedIn,upload.single('image'),(req,res) => {
                 if(err){
                     console.log(err);
                 }else {
-                    res.redirect('/campgrounds');
+                   
+                    let newCampground_notification = {
+                        username:newCampground.author.username,
+                        campgroundId:newCampground.id
+
+                    };
+
+                    User.findById(req.user._id).populate('followers').exec((err,user)=>{                    
+                         if (err) {
+                             console.log(err);
+                         } else {
+                            for(let follower of user.followers){
+                        
+                                if (follower.notifications) {
+                                         Notification.create(newCampground_notification, (err,createdNotification)=>{
+                                             if (err) {
+                                                 console.log(err);
+                                             }
+                                             follower.notifications.push(createdNotification);
+                                           
+                                         });
+                                }
+                            }
+                            res.redirect('/campgrounds');
+                         }
+                    });
+
                 }
             })
         });
-         
-        
+           
     });
 
 });

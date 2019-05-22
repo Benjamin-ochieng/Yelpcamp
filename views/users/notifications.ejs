@@ -1,0 +1,13 @@
+<%- include('../partials/header')%>
+ <h1><%= user.username %></h1>
+ <p><%= user.followers.length > 1 ? `${user.followers.length} followers` : `${user.followers.length} follower`%></p>
+
+ <% notifications.forEach(function(notification) { %>                          
+    <li>
+        <a href="/notifications/<%= notification.id %>">
+            <%= notification.username %> created a new campground
+        </a>
+    </li>
+<% }); %>
+ 
+<%- include('../partials/footer') %>

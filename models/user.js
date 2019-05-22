@@ -10,12 +10,9 @@ const userSchema = new mongoose.Schema({
     email:String,
     profileImage:String,
     isAdmin:{type:Boolean, default:false},
-    followers:[
-        {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'User'
-        }
-    ]
+    followers:[{type:mongoose.Schema.Types.ObjectId,ref:'User'}],
+    following:[{type:mongoose.Schema.Types.ObjectId,ref:'User'}],
+    notifications:[{type:mongoose.Schema.Types.ObjectId,ref:'Notification'}]
 });
 
 userSchema.plugin(passportLocalMongoose);
