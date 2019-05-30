@@ -1,21 +1,26 @@
 <%- include('../partials/header') %>
 <div class="container">
-        <header class="jumbotron">
-            <div class="container">
-                <h1>Welcome To YelpCamp!</h1>
-                <p>View our hand-picked campgrounds from all over the world</p>
-                <p>
-                   <a class="btn btn-primary btn-large" href="/campgrounds/new">Add New Campground</a>
-                </p>
-                <form action="/campgrounds" method="GET" class="form-inline">
-                    <div class="form-group">
-                       <label for="search">Campground</label>
-                       <input type="text" name="search" placeholder="Desert Camo" class="form-control">
-                    </div>
-                    <div class="form-group">
-                            <input type="submit" value="Search" class="btn btn-default">
-                    </div>
-                </form>
+        <header class="jumbotron ">
+            <div class="container text-left">
+                <p ><span class="welcome_heading">Welcome to yelpcamp!</span></p>
+                <p><span class="welcome_text">View our hand-picked campgrounds from <br> all over the world</span></p>
+            </div>
+            <div class="container text-center">
+                    <form action="/campgrounds" method="GET" >
+                        <div class="row search">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-9 col-md-9 p-0">
+                                        <input type="text" name="search" class="form-control search-input" placeholder="Search a campsite">
+                                    </div>
+            
+                                    <div class="col-lg-3 col-md-3 p-0">
+                                            <input type="submit" value="Search" class="btn btn-default search-button">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
             </div>
         </header>
         
@@ -23,14 +28,13 @@
            <% campgrounds.forEach(campground => { %>
             
                <div class="col-md-3 col-sm-6">
-                   <div class="thumbnail">
+                   <div class="thumbnail text-left">
                       <img src="<%= campground.image %>">
                       <div class="caption">
                           <h4><%= campground.name %></h4>
+                          <p><a href="/campgrounds/<%= campground._id %>">More Info</a></p>
                       </div>
-                      <p>
-                        <a href="/campgrounds/<%= campground._id %>">More Info</a>
-                      </p>
+
                    </div>
                </div>
            
