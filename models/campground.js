@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const Comment = require('./comment');
 
 
 let campgroundSchema = new mongoose.Schema({
@@ -21,8 +21,21 @@ let campgroundSchema = new mongoose.Schema({
     comments:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Comment'
-    }]
+    }],
+
+    ratings:{
+        type:Number,
+        default:0,
+    }
 });
+
+campgroundSchema.pre('remove',function(next){
+    Comment.deleteMany({"_id":{$in:this.comments}},(err)=>{
+        if(err)return next(err);
+        next()
+    })
+});
+
 
 let Campground = mongoose.model('campground',campgroundSchema);
 

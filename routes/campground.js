@@ -2,7 +2,6 @@
 const express = require('express');
 const router = express.Router();
 const Campground = require('../models/campground');
-const Comment = require('../models/comment');
 const User = require('../models/user');
 const Notification = require('../models/notification');
 const auth = require('../middleware/index');
@@ -142,7 +141,7 @@ router.post('/',auth.isLoggedIn,upload.single('image'),(req,res) => {
 router.get("/:id", auth.isLoggedIn, function(req, res){
      
     //find the campground with provided ID
-    Campground.findById(req.params.id).populate('comments').exec(function(err, foundCampground){
+    Campground.findById(req.params.id).populate({path:'comments',options:{sort:{'createdAt':-1}}}).exec(function(err, foundCampground){
         if(err){
             console.log(err);
         } else {
@@ -178,11 +177,10 @@ router.put('/:id', auth.isCampgroundAuthorized, (req,res) => {
 
 router.delete('/:id',auth.isCampgroundAuthorized, (req,res) => {
     Campground.findById(req.params.id,(err,campground) => {
-        Comment.remove({'_id':{ $in:campground.comments}},(err)=>{
-            if(err) console.log(err);
-            campground.remove();
-            res.redirect('/campgrounds');
-        });
+       if(err)console.log(err)
+       campground.remove();
+       req.flash('success_msg','Your Campground has been deleted');
+       res.redirect('/campgrounds');
     });
 });
 

@@ -3,11 +3,20 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-            <p class="lead">YelpCamp</p>
             <div class="list-group">
-                <li class="list-group-item active">Info 1</li>
-                <li class="list-group-item">Info 2</li>
-                <li class="list-group-item">Info 3</li>
+                   <%if(campground.ratings == 0){%>
+                    <li class="list-group-item">No ratings yet</li>
+                    <%}else{%>
+                    <li class="list-group-item">
+                        <i class="fa fa-star <%if(campground.ratings >= 1){%> checked <%}%>"></i>
+                        <i class="fa fa-star <%if(campground.ratings >= 2){%> checked <%}%>"></i>
+                        <i class="fa fa-star <%if(campground.ratings >= 3){%> checked <%}%>"></i>
+                        <i class="fa fa-star <%if(campground.ratings >= 4){%> checked <%}%>"></i>
+                        <i class="fa fa-star <%if(campground.ratings >= 5){%> checked <%}%>"></i>
+                    </li>
+                    <%}%>
+                <li class="list-group-item">$<%=campground.price%>/night</li>
+                <li class="list-group-item">Host: <a href="/users/<%= campground.author.id %>"><%=campground.author.username%></a>, <%= moment(campground.createdAt)%></li>
             </div>
             <div id="map"></div>
         </div>
@@ -15,23 +24,21 @@
             <div class="thumbnail campground-thumbnail">
                 <img class="img-responsive" src="<%= campground.image %>">
                 <div class="caption-full">
-                    <h4 class="pull-right">$<%=campground.price%></h4>
+                        <% if(user && campground.author.id.equals(user._id) || user && user.isAdmin){ %> 
+                        <div class="col-sm-12 profile-actions text-right">
+                                <a href="/campgrounds/<%= campground._id %>/edit" role="button" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Edit</a>                            
+                                <form class="thumb-form-inline"action="/campgrounds/<%=campground._id%>?_method=DELETE" method="post">
+                                <button type="submit" value="delete" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Delete</button>
+                               </form>
+                        </div>
+                        <% } %>
                     <h4><a><%=campground.name%></a></h4>
-                    <p><%= campground.description %></p>
-                    <p> 
-                        <em>Submitted by: <a href="/users/<%= campground.author.id %>"><%=campground.author.username%></a>, <%= moment(campground.createdAt)%></em>
-                    </p>
-                      <% if(user && campground.author.id.equals(user._id) || user && user.isAdmin){ %>      
-                    <form class="pull-right" action="/campgrounds/<%=campground._id%>?_method=DELETE" method="post">
-                        <input class="btn-link delete-btn" type="submit" value="Delete">
-                    </form>
-                    <a class="btn-link pull-right" href="/campgrounds/<%= campground._id %>/edit">Edit</a>
-                          <% } %>
+                    <p><%= campground.description %></p> 
                 </div>
             </div>
             <div class="well">
                 <div class="text-right">
-                    <a class="btn btn-success" href="/campgrounds/<%= campground._id %>/comments/new">Add New Comment</a>
+                    <a class="btn btn-success" href="/campgrounds/<%= campground._id %>/comments/new">Add a review</a>
                 </div>
                 <hr>
                 <% campground.comments.forEach(function(comment){ %>
@@ -42,6 +49,13 @@
                             <p>
                                 <%= comment.text %> 
                             </p>
+                            <span>
+                                <i class="fa fa-star <%if(comment.rating >= 1){%> checked <%}%>"></i>
+                                <i class="fa fa-star <%if(comment.rating >= 2){%> checked <%}%>"></i>
+                                <i class="fa fa-star <%if(comment.rating >= 3){%> checked <%}%>"></i>
+                                <i class="fa fa-star <%if(comment.rating >= 4){%> checked <%}%>"></i>
+                                <i class="fa fa-star <%if(comment.rating >= 5){%> checked <%}%>"></i>
+                            </span>
                             <span class="pull-right"><%= moment(comment.createdAt)%></span>
                         </div>
                         <% if(user && comment.author.id.equals(user.id) || user && user.isAdmin){ %>
@@ -54,6 +68,9 @@
                          <% } %>
                     </div>
                 <% }) %>
+            </div>
+            <div class="text-right">
+                <a class="btn btn-success" href="/campgrounds/<%= campground._id %>/comments/">See more reviews</a>
             </div>
         </div>
     </div>

@@ -1,8 +1,40 @@
 <%- include('../partials/header')%>
 
-<form action="/campgrounds/<%= campground_id %>/comments/<%= comment._id %>?_method=PUT" method="POST">
+<!-- <form action="/campgrounds/<%= campground_id %>/comments/<%= comment._id %>?_method=PUT" method="POST">
     <input type="text" name="comment[text]" value="<%= comment.text%>">
     <button type="submit">Update campground</button>
-</form>
+</form> -->
+
+
+<div class="container">
+    <div class="row">
+        <h1 style="text-align: center">Edit your review</h1>
+        <div style="width: 30%; margin: 25px auto;">
+            <form action="/campgrounds/<%= campground_id %>/comments/<%= comment._id %>?_method=PUT" method="POST">
+                <div class="form-group">
+                    <label for="comment[text]">Review</label>
+                    <input class="form-control" type="text" name="comment[text]" value="<%= comment.text%>">
+                </div>
+                <span class="rating">
+                    <input type="radio" class="rating-input" id="rating-input-1-5" name="comment[rating]" value="5">
+                    <label for="rating-input-1-5" class="rating-star"></label>
+                    <input type="radio" class="rating-input" id="rating-input-1-4" name="comment[rating]" value="4">
+                    <label for="rating-input-1-4" class="rating-star"></label>
+                    <input type="radio" class="rating-input" id="rating-input-1-3" name="comment[rating]" value="3"> 
+                    <label for="rating-input-1-3" class="rating-star"></label>
+                    <input type="radio" class="rating-input" id="rating-input-1-2" name="comment[rating]" value="2">     
+                    <label for="rating-input-1-2" class="rating-star"></label>
+                    <input type="radio" class="rating-input" id="rating-input-1-1" name="comment[rating]" value="1">
+                    <label for="rating-input-1-1" class="rating-star"></label>
+                </span>
+                <div class="form-group">
+                    <input type="submit" value="Submit" class="btn btn-lg btn-primary btn-block" name="submitBtn">
+                    <!-- <button class="btn btn-lg btn-primary btn-block ">Submit!</button> -->
+                </div>
+            </form>
+            <a href="/campgrounds">Go Back</a>
+        </div>
+    </div>
+</div>
 
 <%- include('../partials/footer') %>
