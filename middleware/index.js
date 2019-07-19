@@ -61,8 +61,29 @@ function isCommentAuthorized(req,res,next){
     }
 }
 
+function hasNotReviewed(req,res,next){
+  if (req.isAuthenticated) {
+      Campground.findById(req.params.id).populate('comments').exec((err,campground)=>{
+          if (err) {
+              req.flash('error_msg', err.message);
+          } else {
+              if (campground.comments.some(comment => comment['author'].id.equals(req.user.id)) ) {
+                req.flash('error_msg','You have already reviewed this campground' );              
+                res.redirect(`/campgrounds/${req.params.id}`);           
+              } else {
+                next()
+              }
+          }
+      });
+  } else {
+    req.flash('error_msg','Please login or Signup to continue' );
+    res.redirect('/login');  
+  }
+}
+
 auth.isLoggedIn = isLoggedIn;
 auth.isCampgroundAuthorized = isCampgroundAuthorized;
 auth.isCommentAuthorized = isCommentAuthorized;
+auth.hasNotReviewed = hasNotReviewed;
 
 module.exports = auth;
